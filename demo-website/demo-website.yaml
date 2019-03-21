@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: demo-website
+  labels:
+    app: demo-website
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: demo-website
+  template:
+    metadata:
+      labels:
+        app: demo-website
+    spec:
+      containers:
+      - name: demo-website
+        image: yaalexf/demo-website
+        imagePullPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: demo-website
+spec:
+  type: NodePort
+  ports:
+  - name: https
+    port: 80
+    nodePort: 30080
+  selector:
+    app: demo-website
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: edgelb
+    kubernetes.dcos.io/edgelb-pool-name: edgelb-proxy
+  labels:
+    owner: dklb
+  name: demo-website
+spec:
+  rules:
+  - host: "demo-website.dcos"
+    http:
+      paths:
+      - backend:
+          serviceName: demo-website
+          servicePort: 80

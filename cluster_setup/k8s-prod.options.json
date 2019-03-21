@@ -1,0 +1,35 @@
+{
+    "service": {
+        "name": "k8s-prod",
+        "service_account": "k8s-prod",
+        "service_account_secret": "k8s-prod/sa"
+    },
+    "calico": {
+        "calico_ipv4pool_cidr": "192.178.0.0/16",
+        "cni_mtu": 1400,
+        "felix_ipinipenabled": true,
+        "felix_ipinipmtu": 1420,
+        "ip_autodetection_method": "can-reach=9.0.0.0",
+        "ipv4pool_ipip": "Always",
+        "typha": {
+            "enabled": false,
+            "replicas": 3
+        }
+    },
+    "kubernetes": {
+        "service_cidr": "10.100.0.0/16",
+        "private_node_count": 2,
+        "public_node_count": 0,
+        "control_plane_reserved_resources": {
+            "cpus": 1
+        },
+        "private_reserved_resources": {
+            "kube_cpus": 0.5,
+            "system_cpus": 1
+        },
+        "public_reserved_resources": {
+            "kube_cpus": 0.5,
+            "system_cpus": 1
+        }
+    }
+}

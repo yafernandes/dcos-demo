@@ -1,0 +1,35 @@
+{
+  "id": "/website",
+  "instances": 1,
+  "container": {
+    "portMappings": [
+      {
+        "containerPort": 80,
+        "name": "webport"
+      }
+    ],
+    "type": "DOCKER",
+    "volumes": [],
+    "docker": {
+      "image": "yaalexf/demo-website",
+      "forcePullImage": true
+    }
+  },
+  "cpus": 0.1,
+  "mem": 128,
+  "requirePorts": false,
+  "networks": [
+    {
+      "mode": "container",
+      "name": "dcos"
+    }
+  ],
+  "healthChecks": [
+    {
+      "protocol": "MESOS_HTTP",
+      "path": "/health"
+    }
+  ],
+  "fetch": [],
+  "constraints": []
+}

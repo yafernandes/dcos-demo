@@ -1,0 +1,257 @@
+{
+    "apiVersion": "V2",
+    "name": "dcos-lb",
+    "count": 1,
+    "autoCertificate": true,
+    "secrets": [
+        {
+          "secret": "edgelb_cert",
+          "file": "edgelb_cert"
+        }
+    ],
+    "haproxy": {
+        "frontends": [
+            {
+                "bindPort": 10080,
+                "protocol": "HTTP",
+                "linkBackend": {
+                    "defaultBackend": "demo-website",
+                    "map": [
+                        {
+                            "hostEq": "demo-website.dcos",
+                            "backend": "demo-website"
+                        }
+                    ]
+                }
+            },
+            {
+                "bindPort": 10443,
+                "protocol": "HTTPS",
+                "certificates": [
+                    "$SECRETS/edgelb_cert"
+                ],
+                "linkBackend": {
+                    "defaultBackend": "demo-website",
+                    "map": [
+                        {
+                            "hostEq": "demo-website.dcos",
+                            "backend": "demo-website"
+                        }
+                    ]
+                }
+            },
+            {
+                "bindPort": 6443,
+                "protocol": "HTTPS",
+                "certificates": [
+                    "$SECRETS/edgelb_cert"
+                ],
+                "linkBackend": {
+                    "defaultBackend": "k8s-prod"
+                }
+            },
+            {
+                "bindPort": 7443,
+                "protocol": "HTTPS",
+                "certificates": [
+                    "$AUTOCERT"
+                ],
+                "linkBackend": {
+                    "defaultBackend": "k8s-uat"
+                }
+            },
+            {
+                "bindPort": 3000,
+                "protocol": "HTTP",
+                "linkBackend": {
+                    "defaultBackend": "grafana"
+                }
+            },
+            {
+                "bindPort": 9090,
+                "protocol": "HTTP",
+                "linkBackend": {
+                    "defaultBackend": "prometheus_server"
+                }
+            },
+            {
+                "bindPort": 9093,
+                "protocol": "HTTP",
+                "linkBackend": {
+                    "defaultBackend": "prometheus_alertmanager"
+                }
+            },
+            {
+                "bindPort": 9091,
+                "protocol": "HTTP",
+                "linkBackend": {
+                    "defaultBackend": "prometheus_pushgateway"
+                }
+            },
+            {
+                "bindPort": 11080,
+                "protocol": "HTTP",
+                "linkBackend": {
+                    "defaultBackend": "cicd"
+                }
+            },
+            {
+                "bindPort": 12080,
+                "protocol": "HTTP",
+                "linkBackend": {
+                    "defaultBackend": "lighthouse"
+                }
+            },
+            {
+                "bindPort": 8888,
+                "protocol": "HTTP",
+                "linkBackend": {
+                    "defaultBackend": "jupyter_notebook"
+                }
+            }
+        ],
+        "backends": [
+            {
+                "name": "k8s-prod",
+                "protocol": "HTTPS",
+                "services": [
+                    {
+                        "mesos": {
+                            "frameworkName": "k8s-prod",
+                            "taskNamePattern": "kube-control-plane"
+                        },
+                        "endpoint": {
+                            "portName": "apiserver"
+                        }
+                    }
+                ]
+            },
+            {
+                "name": "k8s-uat",
+                "protocol": "HTTPS",
+                "services": [
+                    {
+                        "mesos": {
+                            "frameworkName": "k8s-uat",
+                            "taskNamePattern": "kube-control-plane"
+                        },
+                        "endpoint": {
+                            "portName": "apiserver"
+                        }
+                    }
+                ]
+            },
+            {
+                "name": "grafana",
+                "protocol": "HTTP",
+                "services": [
+                    {
+                        "endpoint": {
+                            "TYPE": "ADDRESS",
+                            "address": "grafana.grafana.l4lb.thisdcos.directory",
+                            "port": 3000
+                        }
+                    }
+                ]
+            },
+            {
+                "name": "prometheus_server",
+                "protocol": "HTTP",
+                "services": [
+                    {
+                        "endpoint": {
+                            "TYPE": "ADDRESS",
+                            "address": "prometheus.prometheus.l4lb.thisdcos.directory",
+                            "port": 9090
+                        }
+                    }
+                ]
+            },
+            {
+                "name": "prometheus_alertmanager",
+                "protocol": "HTTP",
+                "services": [
+                    {
+                        "endpoint": {
+                            "TYPE": "ADDRESS",
+                            "address": "alertmanager.prometheus.l4lb.thisdcos.directory",
+                            "port": 9093
+                        }
+                    }
+                ]
+            },
+            {
+                "name": "prometheus_pushgateway",
+                "protocol": "HTTP",
+                "services": [
+                    {
+                        "endpoint": {
+                            "TYPE": "ADDRESS",
+                            "address": "pushgateway.prometheus.l4lb.thisdcos.directory",
+                            "port": 9091
+                        }
+                    }
+                ]
+            },
+            {
+                "name": "demo-website",
+                "protocol": "HTTP",
+                "services": [
+                    {
+                        "marathon": {
+                            "serviceID": "/website"
+                        },
+                        "endpoint": {
+                            "portName": "webport"
+                        }
+                    }
+                ]
+            },
+            {
+                "name": "cicd",
+                "protocol": "HTTP",
+                "services": [
+                    {
+                        "marathon": {
+                            "serviceID": "/jenkins-deployed-app"
+                        },
+                        "endpoint": {
+                            "portName": "jenkins-deployed-app"
+                        }
+                    }
+                ]
+            },
+            {
+                "name": "lighthouse",
+                "protocol": "HTTP",
+                "services": [
+                    {
+                        "marathon": {
+                            "serviceID": "/portworx"
+                        },
+                        "endpoint": {
+                            "portName": "api"
+                        }
+                    }
+                ]
+            },
+            {
+                "name": "jupyter_notebook",
+                "protocol": "HTTP",
+                "services": [
+                    {
+                        "marathon": {
+                            "serviceID": "/jupyterlab-notebook"
+                        },
+                        "endpoint": {
+                            "portName": "notebook"
+                        }
+                    }
+                ]
+            }
+        ],
+        "stats": {
+            "bindPort": 6090
+        }
+    }
+}

@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: kafka-producer
+  labels:
+    app: kafkka-producer
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: kafkka-producer
+  template:
+    metadata:
+      labels:
+        app: kafkka-producer
+    spec:
+      containers:
+      - name: kafka-producer
+        image: yaalexf/kafka-producer
+        imagePullPolicy: Always
+        env:
+          - name: KP_BOOTSTRAP_SERVER
+            value: "broker.kafka.l4lb.thisdcos.directory:9092"
+          - name: KP_TOPIC
+            value: "events"
+          - name: KP_NUMBER_OF_PARTITIONS
+            value: "3"
+          - name: KP_DELAY_BETWEEN_MESSAGES
+            value: "0.0007"
