@@ -36,8 +36,8 @@ module "dcos" {
   tags={owner = "afernandes"} 
 
   public_agents_additional_ports = [
-    "6443",  # k8s-prod
-    "7443",  # k8s-uat
+    "6443",  # kubectl - k8s-prod
+    "7443",  # kubectl - k8s-uat
     "10080", # demo-website
     "10443", # demo-website using https
     "3000",  # Grafana
