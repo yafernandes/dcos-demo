@@ -56,25 +56,23 @@ while [ -z "`dcos kubernetes manager plan status deploy | grep deploy | grep COM
     sleep 10;
 done
 
+PUBLIC_IP=$(./find_DCOS_public_ip.sh)
+PUBLIC_IP=${PUBLIC_IP%$'\r'}
+
 dcos kubernetes cluster create --options=k8s-prod.options.json --yes
 
 # Setup kubectl.  First waits for Kubernets to be fully deployed
-rm -rf ~/.kube
-
-PUBLIC_IP=$(./find_DCOS_public_ip.sh)
-PUBLIC_IP=${PUBLIC_IP%$'\r'}
-        
 while [ -z "`dcos kubernetes cluster debug plan status deploy --cluster-name=k8s-prod | grep deploy | grep COMPLETE`" ]; do
     echo "Kubernetes Cluster not ready.  Checking again in 10 secods."
     sleep 10;
 done
 
+rm -rf ~/.kube
 dcos kubernetes cluster kubeconfig \
     --insecure-skip-tls-verify \
     --context-name=k8s-prod \
     --cluster-name=k8s-prod \
     --apiserver-url=https://$PUBLIC_IP:6443/
-
 
 # Installs dklb and exposes Kubernetes dashboard.
 kubectl apply -f https://raw.githubusercontent.com/mesosphere/dklb/master/docs/deployment/00-prereqs.yaml

@@ -44,7 +44,7 @@
                 "bindPort": 6443,
                 "protocol": "HTTPS",
                 "certificates": [
-                    "$SECRETS/edgelb_cert"
+                    "$AUTOCERT"
                 ],
                 "linkBackend": {
                     "defaultBackend": "k8s-prod"
