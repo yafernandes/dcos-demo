@@ -32,7 +32,6 @@ while read repo_url; do
     dcos package repo add --index=0 $repo_url
 done < ~/secrets/repos.txt
 
-dcos package repo add --index=0 kubernetes-cluster-aws https://universe-converter.mesosphere.com/transform?url=https://infinity-artifacts.s3.amazonaws.com/autodelete7d/kubernetes-cluster/20190321-132924-7ULxAvO0rAS2UMnB/stub-universe-kubernetes-cluster.json
 # Install EdgeLB
 dcos package install --options=edgelb.options.json edgelb --yes
 
