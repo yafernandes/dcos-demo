@@ -1,4 +1,4 @@
 ## MAWS Setup
 ```
-souce ./maws_setup.sh
+source ./maws_setup.sh
 ```
