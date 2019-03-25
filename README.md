@@ -10,6 +10,7 @@
     - App name should be /website.
     - Deploy yaalexf/demo-website container using UI.
     - Map port 80 to webport
+    - Add healthcheck using Path `/health`.
 - Access using `http://PUBLIC_IP:10080/`.  Call attention how it is always hitting the same host.
 - Scale up.
 - Show load balancer working.  The page should show hitting different hosts across refreshs.
