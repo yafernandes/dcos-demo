@@ -1,0 +1,22 @@
+{
+    "service": {
+        "name": "k8s-uat",
+        "service_account": "k8s-uat",
+        "service_account_secret": "k8s-uat/sa"
+    },
+    "kubernetes": {
+        "private_node_count": 1,
+        "public_node_count": 1,
+        "control_plane_reserved_resources": {
+            "cpus": 1
+        },
+        "private_reserved_resources": {
+            "kube_cpus": 0.5,
+            "system_cpus": 1
+        },
+        "public_reserved_resources": {
+            "kube_cpus": 0.5,
+            "system_cpus": 1
+        }
+    }
+}
