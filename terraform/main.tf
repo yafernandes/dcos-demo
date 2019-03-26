@@ -25,7 +25,7 @@ module "dcos" {
   private_agents_instance_type = "m5a.2xlarge"
   public_agents_instance_type = "m5a.2xlarge"
 
-  # availability_zones = ["us-east-1a","us-east-1b","us-east-1c"]
+  availability_zones = ["us-east-1a","us-east-1b","us-east-1c"]
   dcos_version = "1.12.3"
 
   # dcos_variant = "open"
